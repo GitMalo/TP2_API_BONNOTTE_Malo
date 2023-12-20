@@ -19,3 +19,11 @@ def preprocessing_data():
 @router.get("/split-train-test")
 def split_train_test():
     return split_train_test_kaggle()
+
+@router.get("/train_model")
+def training_model():
+    return train_model
+
+@router.get("/predict_model")
+def prediction_model():
+    return predict_model()

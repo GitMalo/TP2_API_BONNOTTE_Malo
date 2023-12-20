@@ -6,6 +6,7 @@ from src.app import get_application
 
 app = get_application()
 
+# redirect to the documentation
 @app.get("/")
 def redirect_to_doc():
     return RedirectResponse(url="/docs")
