@@ -27,3 +27,11 @@ def training_model():
 @router.get("/predict_model")
 def prediction_model():
     return predict_model()
+
+@router.get("/retrieve_firestore")
+def firestore():
+    return retrieve_firestore()
+
+@router.get("/update-firestore")
+def upd_firestore():
+    return update_firestore()

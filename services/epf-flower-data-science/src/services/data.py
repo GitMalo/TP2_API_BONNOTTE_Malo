@@ -5,6 +5,7 @@ from sklearn.svm import SVC
 import os
 import json
 import joblib
+from src.services.firestoreClient import FirestoreClient
 
 def download_dataset_kaggle():
     """download the dataset iris and saves it in the directory save_dir
@@ -72,8 +73,31 @@ def train_model():
     return {"model trained"}, model
 
 def predict_model():
+    """load the model and predict the test set
+    input : nothing
+    output : json containing the prediction"""
     model = train_model()[1]
     data_test = pd.read_json(split_train_test_kaggle()[1])
     X_test = data_test.drop("target", axis=1)
     y_pred = model.predict(X_test)
     return pd.DataFrame(y_pred).to_json(orient="records")
+
+def retrieve_firestore():
+    """Retreive parameters from Firestone
+    input : nothing
+    output : parameters"""
+    client = FirestoreClient()
+    params = client.get(collection_name="parameters", document_id="parameters")
+    return params
+
+def update_firestore():
+    """Update and Add parameters on our Firestone database
+    input : nothing
+    output : parameters"""
+    client = FirestoreClient()
+    parameters_ref = client.client.collection("parameters").document("parameters")
+    origin_params = client.get(collection_name="parameters", document_id="parameters")
+    origin_params['n_estimators'] = 100
+    origin_params['criterion'] = "gini"
+    parameters_ref.set(origin_params)
+    return origin_params
